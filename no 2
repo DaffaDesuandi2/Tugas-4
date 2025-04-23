@@ -1,0 +1,70 @@
+class EmptyTaskError(Exception):
+    pass
+
+class TaskNotFoundError(Exception):
+    pass
+
+tasks = []
+
+def add_task(task):
+    if not task.strip():
+        raise EmptyTaskError("Tugas tidak boleh kosong.")
+    tasks.append(task)
+    return "Tugas berhasil ditambahkan!"
+
+def remove_task(index):
+    idx0 = index - 1
+    if idx0 < 0 or idx0 >= len(tasks):
+        raise TaskNotFoundError(f"Tugas dengan nomor {index} tidak ditemukan.")
+    removed = tasks.pop(idx0)
+    return f"Tugas “{removed}” berhasil dihapus."
+
+def show_tasks():
+    if not tasks:
+        return "Daftar tugas masih kosong."
+    lines = ["Daftar Tugas:"]
+    for i, t in enumerate(tasks, start=1):
+        lines.append(f"{i}. {t}")
+    return "\n".join(lines)
+
+def main():
+    while True:
+        print("""
+Pilih aksi:
+1. Tambah tugas
+2. Hapus tugas
+3. Tampilkan daftar tugas
+4. Keluar
+""")
+        choice = input("Masukkan pilihan (1/2/3/4): ").strip()
+        if choice == '4':
+            print("Keluar dari program.")
+            break
+
+        try:
+            if choice == '1':
+                task = input("Masukkan tugas yang ingin ditambahkan: ")
+                msg = add_task(task)
+                print(msg)
+
+            elif choice == '2':
+                num = input("Masukkan nomor tugas yang ingin dihapus: ")
+                index = int(num)
+                msg = remove_task(index)
+                print(msg)
+
+            elif choice == '3':
+                print(show_tasks())
+
+            else:
+                print("Pilihan tidak valid. Harap masukkan 1, 2, 3, atau 4.")
+
+        except ValueError:
+            print("Input tidak valid. Harap masukkan angka yang valid.")
+        except EmptyTaskError as e:
+            print(f"Error: {e}")
+        except TaskNotFoundError as e:
+            print(f"Error: {e}")
+
+if __name__ == "__main__":
+    main()
